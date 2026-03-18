@@ -171,6 +171,12 @@ The AI produces one Markdown file. Run `convert.py` on it to get `quiz.json`.
 - Choice questions auto-reveal answer on click
 - Freetext questions show model answer on demand
 
+## Claude Code Skill
+
+A `/studyquiz` skill is available for [Claude Code](https://claude.ai/code) that automates the full workflow: read source material → generate quiz markdown → convert → deploy. The skill includes the format spec, quiz template, and app templates.
+
+Install: copy the `studyquiz/` skill folder to `~/.claude/commands/studyquiz/`.
+
 ## License
 
 MIT
