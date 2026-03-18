@@ -109,6 +109,12 @@ code, pre code, .code-inline {
   min-height: 36px;
 }
 
+.nav-left {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
 .prereq-link {
   color: #3730a3;
   text-decoration: underline;
@@ -534,8 +540,11 @@ code, pre code, .code-inline {
     </div>
 
     <nav class="nav-row" aria-label="Question navigation">
-      <button class="btn btn-ghost btn-nav" id="prev-btn" aria-label="Previous question">&larr; Prev</button>
-      <a class="q-counter" id="q-counter" href="#" title="Back to start"></a>
+      <div class="nav-left">
+        <button class="btn btn-ghost btn-nav" id="home-btn" aria-label="Back to start" title="Back to start">&larr; Home</button>
+        <button class="btn btn-ghost btn-nav" id="prev-btn" aria-label="Previous question">Prev</button>
+      </div>
+      <span class="q-counter" id="q-counter"></span>
       <button class="btn btn-primary btn-nav" id="next-btn" aria-label="Next question">Next &rarr;</button>
     </nav>
 
@@ -1038,8 +1047,7 @@ code, pre code, .code-inline {
     window.scrollTo(0, 0);
   });
 
-  $('q-counter').addEventListener('click', function(e) {
-    e.preventDefault();
+  $('home-btn').addEventListener('click', function() {
     renderStart();
     window.scrollTo(0, 0);
   });
