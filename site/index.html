@@ -6,6 +6,87 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Quiz</title>
 <style>
+/* ===== Theme Variables ===== */
+:root {
+  --bg: #f5f5f7;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --text: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-body: #4b5563;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --border: #d1d5db;
+  --option-selected-bg: #eff6ff;
+  --option-hover-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --code-bg: #f3f4f6;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+  --success-text: #166534;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #991b1b;
+  --neutral-bg: #eff6ff;
+  --neutral-border: #bfdbfe;
+  --neutral-text: #1e40af;
+  --prereq-bg: #f0f4ff;
+  --prereq-border: #6366f1;
+  --prereq-text: #3730a3;
+  --given-bg: #fffbeb;
+  --given-border: #f59e0b;
+  --given-label: #92400e;
+  --given-text: #78350f;
+  --part-desc-bg: #f9fafb;
+  --part-desc-border: #e5e7eb;
+  --model-answer-bg: #f9fafb;
+  --model-answer-border: #e5e7eb;
+  --progress-bg: #e5e5ea;
+  --btn-secondary-bg: #e5e5ea;
+  --btn-ghost-hover: rgba(0,113,227,0.06);
+  --textarea-border: #d1d5db;
+  --privacy-text: #86868b;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --card-bg: #232342;
+  --card-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  --text: #e8e8ed;
+  --text-secondary: #9ca3af;
+  --text-body: #c4c9d4;
+  --accent: #4da3ff;
+  --accent-hover: #66b3ff;
+  --border: #3d3d5c;
+  --option-selected-bg: #1e3a5f;
+  --option-hover-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --code-bg: #2a2a4a;
+  --success-bg: #0f2d1a;
+  --success-border: #166534;
+  --success-text: #86efac;
+  --error-bg: #2d0f0f;
+  --error-border: #991b1b;
+  --error-text: #fca5a5;
+  --neutral-bg: #1e2a4a;
+  --neutral-border: #2563eb;
+  --neutral-text: #93c5fd;
+  --prereq-bg: #1e1e3a;
+  --prereq-border: #818cf8;
+  --prereq-text: #a5b4fc;
+  --given-bg: #2d2410;
+  --given-border: #d97706;
+  --given-label: #fbbf24;
+  --given-text: #fcd34d;
+  --part-desc-bg: #2a2a4a;
+  --part-desc-border: #3d3d5c;
+  --model-answer-bg: #2a2a4a;
+  --model-answer-border: #3d3d5c;
+  --progress-bg: #3d3d5c;
+  --btn-secondary-bg: #3d3d5c;
+  --btn-ghost-hover: rgba(77,163,255,0.1);
+  --textarea-border: #3d3d5c;
+  --privacy-text: #9ca3af;
+}
+
 /* ===== Reset & Base ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,10 +94,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   font-size: 16px;
   line-height: 1.65;
-  color: #1d1d1f;
-  background: #f5f5f7;
+  color: var(--text);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ===== Layout ===== */
@@ -32,11 +114,12 @@ body {
 
 /* ===== Cards ===== */
 .card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: var(--card-shadow);
   padding: 2rem;
   margin-bottom: 1.5rem;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 @media (max-width: 600px) {
@@ -497,9 +580,139 @@ code, pre code, .code-inline {
 .mt-3 { margin-top: 1.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 .hidden { display: none !important; }
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.25s ease;
+  z-index: 100;
+  line-height: 1;
+}
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ===== Dark Mode Overrides ===== */
+[data-theme="dark"] .text-secondary,
+[data-theme="dark"] .q-counter,
+[data-theme="dark"] .start-meta,
+[data-theme="dark"] .loading { color: var(--text-secondary); }
+
+[data-theme="dark"] .start-subtitle,
+[data-theme="dark"] .start-instructions,
+[data-theme="dark"] .end-stat,
+[data-theme="dark"] .error-box p { color: var(--text-body); }
+
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 { color: var(--text); }
+
+[data-theme="dark"] .btn-primary { background: var(--accent); }
+[data-theme="dark"] .btn-primary:hover { background: var(--accent-hover); }
+[data-theme="dark"] .btn-secondary { background: var(--btn-secondary-bg); color: var(--text); }
+[data-theme="dark"] .btn-ghost { color: var(--accent); }
+[data-theme="dark"] .btn-ghost:hover { background: var(--btn-ghost-hover); }
+
+[data-theme="dark"] .option-card {
+  border-color: var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+}
+[data-theme="dark"] .option-card:hover {
+  border-color: #5a5a7a;
+  box-shadow: var(--option-hover-shadow);
+}
+[data-theme="dark"] .option-card.selected {
+  border-color: var(--accent);
+  background: var(--option-selected-bg);
+}
+
+[data-theme="dark"] .progress-bar-track { background: var(--progress-bg); }
+[data-theme="dark"] .progress-bar-fill { background: var(--accent); }
+
+[data-theme="dark"] .prereq-callout {
+  background: var(--prereq-bg);
+  border-left-color: var(--prereq-border);
+}
+[data-theme="dark"] .prereq-link,
+[data-theme="dark"] .prereq-callout { color: var(--prereq-text); }
+
+[data-theme="dark"] .given-callout {
+  background: var(--given-bg);
+  border-left-color: var(--given-border);
+}
+[data-theme="dark"] .given-callout .given-label { color: var(--given-label); }
+[data-theme="dark"] .given-callout .given-text { color: var(--given-text); }
+
+[data-theme="dark"] .part-description {
+  background: var(--part-desc-bg);
+  border-color: var(--part-desc-border);
+  color: var(--text-body);
+}
+[data-theme="dark"] .part-label { color: var(--text-secondary); }
+
+[data-theme="dark"] .answer-banner.correct {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+[data-theme="dark"] .answer-banner.incorrect {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--error-text);
+}
+[data-theme="dark"] .answer-banner.neutral {
+  background: var(--neutral-bg);
+  border-color: var(--neutral-border);
+  color: var(--neutral-text);
+}
+[data-theme="dark"] .answer-explanation { color: var(--text-body); }
+
+[data-theme="dark"] .model-answer-box {
+  background: var(--model-answer-bg);
+  border-color: var(--model-answer-border);
+  color: var(--text-body);
+}
+
+[data-theme="dark"] .textarea-field {
+  background: var(--card-bg);
+  border-color: var(--textarea-border);
+  color: var(--text);
+}
+[data-theme="dark"] .textarea-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(77,163,255,0.15);
+}
+
+[data-theme="dark"] .q-stem { color: var(--text); }
+[data-theme="dark"] .option-text pre,
+[data-theme="dark"] .option-text code { background: var(--code-bg); color: var(--text); }
+
+[data-theme="dark"] .loading-spinner {
+  border-color: var(--progress-bg);
+  border-top-color: var(--accent);
+}
+
+[data-theme="dark"] .start-privacy { color: var(--privacy-text); }
+[data-theme="dark"] .error-box h2 { color: var(--error-text); }
 </style>
 </head>
 <body>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">☀️</button>
 
 <main class="container" id="app">
   <!-- Loading -->
@@ -1110,6 +1323,22 @@ code, pre code, .code-inline {
   }
 
   loadQuiz();
+
+  /* ---------- Theme Toggle ---------- */
+  var toggleBtn = document.getElementById('theme-toggle');
+  function setTheme(dark) {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    toggleBtn.textContent = dark ? '🌙' : '☀️';
+    try { localStorage.setItem('sq-theme', dark ? 'dark' : 'light'); } catch(e) {}
+  }
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved = null;
+  try { saved = localStorage.getItem('sq-theme'); } catch(e) {}
+  setTheme(saved ? saved === 'dark' : prefersDark);
+  toggleBtn.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    setTheme(!isDark);
+  });
 
 })();
 </script>
