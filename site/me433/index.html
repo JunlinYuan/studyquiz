@@ -157,7 +157,7 @@ body {
   .model-answer-box { font-size: 0.85rem; padding: 0.8rem; }
   .show-answer-wrap { margin-top: 1rem; }
   .end-stat { font-size: 0.95rem; }
-  .theme-toggle { width: 34px; height: 34px; font-size: 1rem; top: 0.5rem; right: 0.5rem; }
+  .theme-toggle { width: 28px; height: 28px; font-size: 0.85rem; }
 }
 
 /* ===== Typography ===== */
@@ -615,31 +615,24 @@ code, pre code, .code-inline {
 .mb-2 { margin-bottom: 1rem; }
 .hidden { display: none !important; }
 
-/* ===== Theme Toggle ===== */
+/* ===== Theme Toggle (inline on start screen) ===== */
 .theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: 1.5px solid var(--border);
   background: var(--card-bg);
   color: var(--text);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: var(--card-shadow);
-  transition: all 0.25s ease;
-  z-index: 100;
+  font-size: 1rem;
+  transition: all 0.2s ease;
   line-height: 1;
+  vertical-align: middle;
 }
-.theme-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
+.theme-toggle:hover { transform: scale(1.1); }
 
 /* ===== Dark Mode Overrides ===== */
 [data-theme="dark"] .text-secondary,
@@ -758,8 +751,6 @@ code, pre code, .code-inline {
 </head>
 <body>
 
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
-
 <main class="container" id="app">
   <!-- Loading -->
   <div id="loading-screen" class="loading">
@@ -785,7 +776,7 @@ code, pre code, .code-inline {
       <div id="start-prereq"></div>
       <div class="start-instructions" id="start-instructions"></div>
       <p class="start-meta" id="start-meta"></p>
-      <p class="start-privacy">Not tracked — your identity and answers are completely anonymous. Just for fun.</p>
+      <p class="start-privacy">Not tracked — your identity and answers are completely anonymous. Just for fun. <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button></p>
       <div class="start-center">
         <button class="btn btn-primary btn-large" id="begin-btn" aria-label="Begin quiz">Begin</button>
       </div>
