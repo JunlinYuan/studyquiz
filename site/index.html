@@ -996,7 +996,8 @@ code, pre code, .code-inline {
     if (quiz.prereq) {
       var callout = el('div', 'prereq-callout');
       if (quiz.prereqUrl) {
-        var link = el('a', 'prereq-link', { href: quiz.prereqUrl, target: '_blank', rel: 'noopener' });
+        var safeUrl = quiz.prereqUrl && /^(https?:\/\/|\/|\.\.?\/|[a-zA-Z0-9])/i.test(quiz.prereqUrl.trim()) && !quiz.prereqUrl.trim().toLowerCase().startsWith('javascript:');
+        var link = el('a', 'prereq-link', { href: safeUrl ? quiz.prereqUrl : '#', target: '_blank', rel: 'noopener' });
         link.textContent = quiz.prereq;
         callout.appendChild(link);
       } else {

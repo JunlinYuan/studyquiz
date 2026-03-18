@@ -576,7 +576,18 @@ body {
     errorEl.classList.add('hidden');
     contentCard.classList.remove('hidden');
     footerCta.classList.remove('hidden');
-    primerContent.innerHTML = html;
+    // Sanitize: strip <script>, event handlers, and javascript: URIs
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    tmp.querySelectorAll('script,iframe,object,embed,form').forEach(function(el) { el.remove(); });
+    tmp.querySelectorAll('*').forEach(function(el) {
+      Array.from(el.attributes).forEach(function(attr) {
+        if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:'))) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    primerContent.innerHTML = tmp.innerHTML;
   }
 
   /* ---------- Fetch & Render ---------- */
