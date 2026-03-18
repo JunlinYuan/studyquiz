@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>AI Primer</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  color: #1d1d1f;
+  background: #f5f5f7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Sticky Header ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.header-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #0071e3;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.back-link:hover {
+  background: rgba(0, 113, 227, 0.06);
+}
+
+@media (max-width: 600px) {
+  .header-inner { padding: 0.65rem 1.25rem; }
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 1.25rem; }
+}
+
+/* ===== Content Card ===== */
+.content-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .content-card { padding: 1.5rem 1.25rem 1.25rem; }
+}
+
+/* ===== Typography ===== */
+.primer-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+}
+
+.primer-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1d1d1f;
+}
+
+.primer-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: #1d1d1f;
+}
+
+.primer-content p {
+  margin-bottom: 1rem;
+}
+
+.primer-content a {
+  color: #0071e3;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.primer-content a:hover {
+  border-bottom-color: #0071e3;
+}
+
+/* ===== Bold & Italic ===== */
+.primer-content strong {
+  font-weight: 600;
+}
+
+.primer-content em {
+  font-style: italic;
+}
+
+/* ===== Lists ===== */
+.primer-content ul,
+.primer-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.primer-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+}
+
+.primer-content li p {
+  margin-bottom: 0.4rem;
+}
+
+.primer-content ul ul,
+.primer-content ol ol,
+.primer-content ul ol,
+.primer-content ol ul {
+  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+/* ===== Code ===== */
+.primer-content code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  font-size: 0.9em;
+  background: #f3f4f6;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: #1d1d1f;
+}
+
+.primer-content pre {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.primer-content pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ===== Blockquotes ===== */
+.primer-content blockquote {
+  background: #f0f4ff;
+  border-left: 4px solid #6366f1;
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  color: #374151;
+  font-style: italic;
+}
+
+.primer-content blockquote p {
+  margin-bottom: 0;
+}
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.primer-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.primer-content thead th {
+  background: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.primer-content tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.primer-content tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.primer-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.primer-content tbody tr:hover {
+  background: #f0f4ff;
+}
+
+/* Center-align columns that have short content like checkmarks */
+.primer-content td:has(.katex),
+.primer-content th:has(.katex) {
+  white-space: nowrap;
+}
+
+/* ===== Horizontal Rules ===== */
+.primer-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* ===== Math (KaTeX) ===== */
+.math-inline {
+  display: inline;
+}
+
+.math-inline .katex {
+  font-size: 1em;
+}
+
+/* ===== Footer CTA ===== */
+.footer-cta {
+  text-align: center;
+  padding: 2rem 1.5rem 1rem;
+}
+
+.footer-cta-text {
+  color: #86868b;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.btn-quiz {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  background: #0071e3;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  min-height: 44px;
+  line-height: 1.4;
+}
+
+.btn-quiz:hover {
+  background: #0077ed;
+}
+
+.btn-quiz:active {
+  background: #005bb5;
+}
+
+/* ===== Loading ===== */
+.loading {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  color: #86868b;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e5ea;
+  border-top-color: #0071e3;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Error ===== */
+.error-box {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.error-box h2 {
+  color: #991b1b;
+  margin-bottom: 0.75rem;
+  font-size: 1.35rem;
+}
+
+.error-box p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.error-box .btn-retry {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.25rem;
+  background: #e5e5ea;
+  color: #1d1d1f;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.error-box .btn-retry:hover {
+  background: #d1d1d6;
+}
+
+/* ===== Hidden ===== */
+.hidden { display: none !important; }
+
+/* ===== Print ===== */
+@media print {
+  .site-header,
+  .footer-cta { display: none; }
+  body { background: #fff; }
+  .content-card { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sticky Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="back-link">&larr; Back to Quiz</a>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+  <!-- Loading -->
+  <div id="loading" class="loading">
+    <div class="loading-spinner" role="status" aria-label="Loading primer"></div>
+    <p>Loading primer...</p>
+  </div>
+
+  <!-- Error -->
+  <div id="error" class="error-box hidden">
+    <h2>Could not load primer</h2>
+    <p id="error-message">The primer document could not be fetched. Please check that primer.md is available.</p>
+    <button class="btn-retry" onclick="loadPrimer()">Try Again</button>
+  </div>
+
+  <!-- Rendered Content -->
+  <article id="content-card" class="content-card hidden">
+    <div id="primer-content" class="primer-content"></div>
+  </article>
+
+  <!-- Footer CTA -->
+  <div id="footer-cta" class="footer-cta hidden">
+    <p class="footer-cta-text">Ready to test your knowledge?</p>
+    <a href="index.html" class="btn-quiz">Take the Quiz &rarr;</a>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" crossorigin="anonymous"></script>
+<script>
+(function() {
+  'use strict';
+
+  /* ---------- DOM Refs ---------- */
+  var loadingEl = document.getElementById('loading');
+  var errorEl = document.getElementById('error');
+  var errorMsgEl = document.getElementById('error-message');
+  var contentCard = document.getElementById('content-card');
+  var primerContent = document.getElementById('primer-content');
+  var footerCta = document.getElementById('footer-cta');
+
+  /* ---------- Math Extraction ---------- */
+
+  /**
+   * Extract $...$ math expressions, replacing with unique placeholders.
+   * Avoids matching $$ (display math) or $ inside code blocks/backticks.
+   * Returns { text, expressions[] }.
+   */
+  function extractMath(markdown) {
+    var expressions = [];
+    var placeholder = '%%MATH_';
+
+    // First, protect code blocks and inline code by replacing them with tokens
+    var codeBlocks = [];
+    var codeIndex = 0;
+
+    // Protect fenced code blocks (```...```)
+    var protected_ = markdown.replace(/```[\s\S]*?```/g, function(match) {
+      var token = '%%CODEBLOCK_' + codeIndex + '%%';
+      codeBlocks.push({ token: token, content: match });
+      codeIndex++;
+      return token;
+    });
+
+    // Protect inline code (`...`)
+    protected_ = protected_.replace(/`[^`]+`/g, function(match) {
+      var token = '%%CODEBLOCK_' + codeIndex + '%%';
+      codeBlocks.push({ token: token, content: match });
+      codeIndex++;
+      return token;
+    });
+
+    // Now extract $...$ math (single dollar signs, not double)
+    // Match $ followed by non-$ non-whitespace content, then $
+    var mathIndex = 0;
+    protected_ = protected_.replace(/\$([^\$]+?)\$/g, function(match, expr) {
+      var token = placeholder + mathIndex + '%%';
+      expressions.push({ token: token, expr: expr });
+      mathIndex++;
+      return token;
+    });
+
+    // Restore code blocks
+    for (var i = 0; i < codeBlocks.length; i++) {
+      protected_ = protected_.replace(codeBlocks[i].token, codeBlocks[i].content);
+    }
+
+    return { text: protected_, expressions: expressions };
+  }
+
+  /**
+   * Replace math placeholders in rendered HTML with KaTeX output.
+   */
+  function renderMath(html, expressions) {
+    for (var i = 0; i < expressions.length; i++) {
+      var entry = expressions[i];
+      try {
+        var rendered = katex.renderToString(entry.expr, {
+          throwOnError: false,
+          displayMode: false
+        });
+        var wrapped = '<span class="math-inline">' + rendered + '</span>';
+        html = html.replace(entry.token, wrapped);
+      } catch (e) {
+        // If KaTeX fails, show the raw expression
+        html = html.replace(entry.token, '<code>' + entry.expr + '</code>');
+      }
+    }
+    return html;
+  }
+
+  /* ---------- HTML Comment Stripping ---------- */
+
+  function stripHtmlComments(markdown) {
+    return markdown.replace(/<!--[\s\S]*?-->/g, '');
+  }
+
+  /* ---------- Table Wrapping ---------- */
+
+  /**
+   * Wrap <table> elements in a scrollable container.
+   */
+  function wrapTables(html) {
+    return html.replace(/<table>/g, '<div class="table-wrapper"><table>').replace(/<\/table>/g, '</table></div>');
+  }
+
+  /* ---------- Marked Configuration ---------- */
+
+  function configureMarked() {
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+      smartypants: true
+    });
+  }
+
+  /* ---------- Render Pipeline ---------- */
+
+  function renderPrimer(markdown) {
+    // 1. Strip HTML comments
+    var cleaned = stripHtmlComments(markdown);
+
+    // 2. Extract math expressions
+    var extracted = extractMath(cleaned);
+
+    // 3. Configure and run marked
+    configureMarked();
+    var html = marked.parse(extracted.text);
+
+    // 4. Render math placeholders with KaTeX
+    html = renderMath(html, extracted.expressions);
+
+    // 5. Wrap tables for responsive scrolling
+    html = wrapTables(html);
+
+    return html;
+  }
+
+  /**
+   * Extract the h1 title from markdown for the page title.
+   */
+  function extractTitle(markdown) {
+    var match = markdown.match(/^#\s+(.+)$/m);
+    return match ? match[1].trim() : null;
+  }
+
+  /* ---------- UI State ---------- */
+
+  function showLoading() {
+    loadingEl.classList.remove('hidden');
+    errorEl.classList.add('hidden');
+    contentCard.classList.add('hidden');
+    footerCta.classList.add('hidden');
+  }
+
+  function showError(msg) {
+    loadingEl.classList.add('hidden');
+    errorEl.classList.remove('hidden');
+    contentCard.classList.add('hidden');
+    footerCta.classList.add('hidden');
+    if (msg) errorMsgEl.textContent = msg;
+  }
+
+  function showContent(html) {
+    loadingEl.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    contentCard.classList.remove('hidden');
+    footerCta.classList.remove('hidden');
+    primerContent.innerHTML = html;
+  }
+
+  /* ---------- Fetch & Render ---------- */
+
+  function loadPrimer() {
+    showLoading();
+
+    fetch('primer.md')
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status + ': Could not fetch primer.md');
+        }
+        return response.text();
+      })
+      .then(function(markdown) {
+        // Set page title from h1
+        var title = extractTitle(markdown);
+        if (title) {
+          document.title = title;
+        }
+
+        // Render and display
+        var html = renderPrimer(markdown);
+        showContent(html);
+      })
+      .catch(function(err) {
+        console.error('Failed to load primer:', err);
+        showError('Could not load the primer document. Please ensure primer.md is in the same directory as this page.');
+      });
+  }
+
+  // Expose for retry button
+  window.loadPrimer = loadPrimer;
+
+  // Initial load
+  loadPrimer();
+
+})();
+</script>
+</body>
+</html>
