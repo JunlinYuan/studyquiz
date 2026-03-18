@@ -5,82 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>StudyQuiz</title>
-<script>
-(function(){
-  var s;try{s=localStorage.getItem('sq-theme')}catch(e){}
-  var d=s?s==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches;
-  document.documentElement.setAttribute('data-theme',d?'dark':'light');
-})();
-</script>
 <style>
-:root {
-  --bg: #f5f5f7; --card-bg: #fff; --text: #1d1d1f; --text-secondary: #86868b;
-  --accent: #0071e3; --border: #d1d5db; --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-[data-theme="dark"] {
-  --bg: #1a1a2e; --card-bg: #232342; --text: #e8e8ed; --text-secondary: #9ca3af;
-  --accent: #4da3ff; --border: #3d3d5c; --card-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 16px; line-height: 1.65; color: var(--text); background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-}
-.container { max-width: 600px; margin: 0 auto; padding: 3rem 2rem; }
-h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
-.subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
-.quiz-list { list-style: none; }
-.quiz-link {
-  display: block; padding: 1.25rem 1.5rem; margin-bottom: 0.75rem;
-  background: var(--card-bg); border-radius: 10px; box-shadow: var(--card-shadow);
-  text-decoration: none; color: var(--text); border: 1.5px solid var(--border);
-  transition: all 0.2s ease;
-}
-.quiz-link:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
-.quiz-link h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--accent); }
-.quiz-link p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; }
-.theme-toggle {
-  position: fixed; top: 1rem; right: 1rem; width: 36px; height: 36px;
-  border-radius: 50%; border: 1.5px solid var(--border); background: var(--card-bg);
-  color: var(--text); cursor: pointer; display: flex; align-items: center;
-  justify-content: center; font-size: 1rem; z-index: 100; transition: all 0.2s;
-}
-.theme-toggle:hover { transform: scale(1.1); }
-.footer { margin-top: 2rem; font-size: 0.75rem; color: var(--text-secondary); text-align: center; }
-@media (max-width: 600px) {
-  .container { padding: 2rem 1rem; }
-  h1 { font-size: 1.4rem; }
-  .quiz-link { padding: 1rem 1.25rem; }
-  .quiz-link h2 { font-size: 1rem; }
-}
+body { font-family: -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f5f5f7; color: #86868b; }
+p { font-size: 0.9rem; }
 </style>
 </head>
-<body>
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button>
-<div class="container">
-  <h1>StudyQuiz</h1>
-  <p class="subtitle">Self-study quizzes</p>
-  <ul class="quiz-list">
-    <li><a class="quiz-link" href="me433/">
-      <h2>AI Primer Quiz</h2>
-      <p>ME433 — Introduction to Computational Fluid Dynamics &middot; 14 questions</p>
-    </a></li>
-  </ul>
-  <p class="footer">Anonymous &middot; No tracking &middot; Just for learning</p>
-</div>
-<script>
-var btn = document.getElementById('theme-toggle');
-function setTheme(d) {
-  document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
-  btn.textContent = d ? '🌙' : '☀️';
-  try { localStorage.setItem('sq-theme', d ? 'dark' : 'light'); } catch(e) {}
-}
-var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-setTheme(isDark);
-btn.addEventListener('click', function() {
-  setTheme(document.documentElement.getAttribute('data-theme') !== 'dark');
-});
-</script>
-</body>
+<body><p>StudyQuiz</p></body>
 </html>
