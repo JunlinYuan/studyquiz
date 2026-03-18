@@ -1,6 +1,7 @@
 # The Four Components of AI Coding Agents
 
-**ME433 — Introduction to Computational Fluid Dynamics**
+**ME433 — Introduction to Computational Fluid Dynamics**\
+Spring 2026 | Prof. Junlin Yuan
 
 ---
 
