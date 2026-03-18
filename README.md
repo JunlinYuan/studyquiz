@@ -1,201 +1,175 @@
 # StudyQuiz
 
-An AI-first quiz creation tool. Write quiz content in Markdown, convert to JSON, and deploy as a polished, anonymous web app. Designed for educators and researchers who want to create self-study quizzes with zero friction.
-
-## Features
-
-- **Single-file input** -- One Markdown file with YAML frontmatter contains all questions, answers, and metadata
-- **AI-friendly format** -- The Markdown format is designed so AI tools (Claude, ChatGPT, etc.) can reliably generate quizzes from any source material
-- **Auto-deploy** -- Push to GitHub and Vercel deploys automatically
-- **Anonymous** -- No tracking, no login, no cookies. Students see questions, pick answers, and compare with model answers
-- **Two question types** -- Multiple choice (auto-reveals answer on click) and free-text (manual reveal with model answer)
-- **Primer page** -- Optional reading material rendered from Markdown with math support (KaTeX)
-- **Mobile-first** -- Clean, responsive design tested on iPhone viewports
+An AI-first quiz creation tool. Write questions and answers in a single Markdown file, convert to JSON, and auto-deploy as a polished web quiz. Anonymous, mobile-first, zero friction.
 
 ## Quick Start
 
 ```bash
-# 1. Write your quiz in Markdown (see format below)
+# 1. Write your quiz (single Markdown file — see format below)
+vim quizzes/my-quiz.md
 
 # 2. Convert to JSON
-python3 convert.py quizzes/my-quiz.md quizzes/my-quiz-answers.md -o site/quiz.json
+python3 convert.py quizzes/my-quiz.md -o site/quiz.json --validate
 
-# 3. (Optional) Add a reading primer
-cp my-primer.md site/primer.md
-
-# 4. Push to GitHub -- auto-deploys to Vercel
+# 3. Push to GitHub — Vercel auto-deploys
 git add . && git commit -m "Update quiz" && git push
 ```
 
-## Quiz Markdown Format
+No dependencies beyond Python 3 standard library.
 
-A quiz consists of two Markdown files: the **quiz file** (questions) and the **answer key** (answers and explanations).
+## Quiz Format
 
-### Quiz File
+A quiz is a single Markdown file with YAML frontmatter, `## Part` headers, and `### Q` headers with `{choice}` or `{freetext}` type tags. Answers are embedded in blockquote sections within the same file.
+
+### Complete Minimal Example
 
 ```markdown
-# My Quiz Title
-
-**Course Name — Subject Area**
-
-> Read "The Companion Guide" before attempting this quiz.
-
-**Instructions:** For each question, pick the best option and explain your reasoning.
+---
+title: Sample Quiz
+subtitle: Example Course
+instructions: Answer each question thoughtfully.
+prereq: Read the companion guide before attempting this quiz.
+prereqUrl: primer.html
+---
 
 ## Part 1: Multiple Choice
 
-**Q1. Choosing a method** — You need to solve a differential equation. Which approach is better?
+### Q1. Basic concept {choice}
+What is 2 + 2?
 
-> **A:** Use trial and error until something works.
->
-> **B:** Start with the exact solution for a simplified case, then verify your numerical method against it.
+- A: 3
+- B: 4
+- C: 5
 
-**Q2. Setting constraints** — Which instruction gives clearer guidance?
+> **Answer: B**
+> 2 + 2 = 4. Basic arithmetic.
 
-> **A:** Write clean code.
->
-> **B:** Write a function with docstring, type hints, and one unit test. Maximum 50 lines.
+---
 
-## Part 2: Free Response
+### Q2. Fix this code {freetext}
+What is wrong with this function? Fix it.
 
-**Q3. Fix the bad prompt** — What are the problems with this prompt? Rewrite it.
+> **Given:** def add(a, b): return a - b
 
-> Please help me with my project. Use AI to code it. Thanks!
+> **Answer:**
+> The function subtracts instead of adding.
+> Fixed: `def add(a, b): return a + b`
 
-**Q4. Explain a concept** — Why is verification important in numerical methods?
+---
 
-## Part 3: Concepts
+## Part 2: Concepts
 
-**Q5.** Explain the difference between validation and verification using an analogy.
+### Q3. Explain recursion {freetext}
+Explain recursion in one sentence.
+
+> **Answer:**
+> Recursion is when a function calls itself with a simpler version of the problem until reaching a base case.
 ```
 
-### Answer Key File
-
-```markdown
-# My Quiz Title — Answer Key
-
-### Q1. Choosing a method — Answer: **B**
-
-B is better because it establishes a ground truth. Trial and error (A) gives no way to confirm correctness.
-
-### Q2. Setting constraints — Answer: **B**
-
-"Clean code" is subjective. B gives measurable criteria: docstring, type hints, unit test, line limit.
-
-### Q3. Fix the bad prompt
-
-Three problems:
-1. No specific task
-2. No constraints or parameters
-3. No output format
-
-Sample rewrite: "Write a Python function `solve.py` that implements Euler's method for dy/dx = -2y, y(0) = 1. Step size h = 0.1, integrate to x = 5. Output: a CSV with columns x, y_numerical, y_exact, error."
-
-### Q4. Explain a concept
-
-Sample answer: Verification checks that the code solves the equations correctly (math is right). Validation checks that the equations describe reality (physics is right). You need both.
-
-### Q5. Validation vs. verification
-
-Sample answer: Verification is checking that you built the bridge according to the blueprint. Validation is checking that the blueprint describes a bridge that will actually hold traffic.
-```
-
-### Frontmatter Fields
+## Frontmatter Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Title | Yes | The `# heading` becomes the quiz title |
-| Subtitle | No | A `**bold line**` with course/subject info |
-| Instructions | No | Line starting with `**Instructions:**` |
-| Prereq | No | Line containing "before attempting this quiz" -- shown as a callout |
-| Parts | No | `## Part N: Title` headings group questions |
+| `title` | Yes | Quiz title displayed at the top |
+| `subtitle` | No | Course or topic name shown below the title |
+| `instructions` | Yes | Directions shown to the student |
+| `prereq` | No | Prerequisite reading description (shown as a callout) |
+| `prereqUrl` | No | Link target for the prereq callout (camelCase, case-sensitive) |
 
-### Question Types
+## Question Types
 
-| Type | Format | Behavior |
-|------|--------|----------|
-| **choice** | Options in `> **A:**` / `> **B:**` blockquote | Clicking an option auto-reveals the correct answer |
-| **freetext** | No options; optional `> quoted` given text | Student types answer, clicks "Show Answer" to see model answer |
+### Choice `{choice}`
 
-## JSON Schema
+Multiple-choice question. Clicking an option auto-reveals the correct answer and explanation.
 
-The converter outputs a single JSON file with this structure:
+```markdown
+### Q1. Choosing a method {choice}
+Which approach is better for solving a differential equation?
 
-```json
-{
-  "title": "Quiz Title",
-  "subtitle": "Course — Subject",
-  "instructions": "Instructions text",
-  "prereq": "Prerequisite reading description",
-  "prereqUrl": "primer.html",
-  "parts": [
-    { "number": 1, "title": "Part Title", "description": "Optional description" }
-  ],
-  "questions": [
-    {
-      "id": 1,
-      "part": 1,
-      "title": "Short title",
-      "stem": "The question text",
-      "type": "choice",
-      "options": { "A": "Option A text", "B": "Option B text" },
-      "answer": "B",
-      "explanation": "Why B is correct"
-    },
-    {
-      "id": 2,
-      "part": 2,
-      "title": "Short title",
-      "stem": "The question text",
-      "type": "freetext",
-      "given": "Optional prompt to improve or context",
-      "answer": "Model answer text"
-    }
-  ]
-}
+- A: Use trial and error until something works.
+- B: Start with the exact solution for a simplified case, then verify numerically.
+
+> **Answer: B**
+> B establishes a ground truth. Trial and error gives no way to confirm correctness.
+```
+
+- Options use `- A:` / `- B:` / `- C:` etc. (A-Z supported)
+- Options can contain code blocks (triple-backtick fences preserved)
+- Answer block: `> **Answer: X**` where X is the correct letter
+
+### Freetext `{freetext}`
+
+Open-ended question. Student types an answer, then clicks "Show Answer" to reveal the model answer.
+
+```markdown
+### Q5. Explain a concept {freetext}
+Why is verification important in numerical methods?
+
+> **Answer:**
+> Verification checks that the code solves the equations correctly.
+> Without it, code can produce plausible but wrong results.
+```
+
+With an optional "given" block for critique/rewrite questions:
+
+```markdown
+### Q10. Fix the bad prompt {freetext}
+What are the problems with this prompt? Rewrite it.
+
+> **Given:** Please help me with my project. Use AI to code it. Thanks!
+
+> **Answer:**
+> No specific task, no constraints, no output format.
+> Rewrite: "Write a Python function that implements Euler's method..."
 ```
 
 ## Deployment
 
-- Hosted on [Vercel](https://vercel.com/) (free tier)
-- Connected to GitHub for auto-deploy on push
-- The `site/` directory is the deploy root
+The project is configured for Vercel auto-deploy:
 
-To set up your own deployment:
+1. Push to GitHub -- Vercel deploys automatically
+2. The `site/` directory is the deploy root
+3. Alias: `studyquiz.vercel.app`
+
+To set up your own:
 
 1. Fork this repo
 2. Connect to Vercel, set the root directory to `site/`
-3. Push to `main` -- Vercel deploys automatically
+3. Push to `main`
 
 ## Project Structure
 
 ```
 studyquiz/
-├── .gitignore
 ├── README.md
-├── convert.py           # Markdown → JSON converter (Python 3, stdlib only)
+├── convert.py           # Markdown -> JSON converter (Python 3 stdlib only)
+├── vercel.json          # Vercel deployment config
 ├── quizzes/             # Source quiz Markdown files
-│   └── ai-primer.md     # Example quiz
-├── site/                # Deploy root (served by Vercel)
-│   ├── index.html       # Quiz app (self-contained, no build step)
-│   ├── primer.html      # Primer reader (renders Markdown with KaTeX math)
-│   ├── quiz.json        # Generated quiz data (output of convert.py)
-│   └── primer.md        # Optional reading material (fetched by primer.html)
+│   └── ai-primer.md     # Example quiz (14 questions)
+└── site/                # Deploy root (served by Vercel)
+    ├── index.html       # Quiz web app (self-contained, no build step)
+    ├── quiz.json        # Generated quiz data (output of convert.py)
+    ├── primer.html      # Primer reader (renders Markdown with KaTeX math)
+    └── primer.md        # Optional reading material (fetched by primer.html)
 ```
 
 ## Creating a Quiz with AI
 
-The Markdown format is designed to be generated by AI. Provide:
+The single-file Markdown format is designed for AI generation. Provide the source material and format spec:
 
-1. **Source material** -- a document, lecture notes, textbook chapter, or any reference
-2. **The format template** -- point the AI to the Quiz Markdown Format section above
-3. **Desired question mix** -- number and types of questions
+> Read the attached document and create a 10-question quiz in StudyQuiz format. Use YAML frontmatter with title, subtitle, and instructions. Use `### QN. Title {choice}` or `{freetext}` headers. Put options as `- A:` / `- B:` list items. Put answers in `> **Answer: X**` or `> **Answer:**` blockquotes. Group questions into 2 parts with `## Part N: Title`. Include 6 choice and 4 freetext questions.
 
-Example prompt:
+The AI produces one Markdown file. Run `convert.py` on it to get `quiz.json`.
 
-> Read this document and create a 10-question quiz in StudyQuiz Markdown format (see README). Use 6 multiple-choice and 4 free-text questions. Group them into two parts: "Core Concepts" (choice) and "Apply Your Knowledge" (freetext). Also generate the answer key file with explanations.
+## Features
 
-The AI will produce two Markdown files. Run `convert.py` on them to get `quiz.json`.
+- Dark/light mode toggle
+- Mobile-responsive layout (tested on iPhone viewports)
+- Home button to return to question list
+- Optional primer page with KaTeX math rendering
+- Anonymous -- no tracking, no login, no cookies
+- Choice questions auto-reveal answer on click
+- Freetext questions show model answer on demand
 
 ## License
 
